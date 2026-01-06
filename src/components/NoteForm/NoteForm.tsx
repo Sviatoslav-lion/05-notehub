@@ -1,8 +1,15 @@
+import type { NoteTag } from '../../types/note';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createNote } from '../../services/noteService';
 import css from './NoteForm.module.css';
+
+interface FormValues {
+  title: string;
+  content: string;
+  tag: NoteTag;
+}
 
 interface NoteFormProps {
   onClose: () => void;
@@ -28,7 +35,7 @@ export default function NoteForm({ onClose }: NoteFormProps) {
   });
 
   return (
-    <Formik
+    <Formik<FormValues>
       initialValues={{ title: '', content: '', tag: 'Todo' }}
       validationSchema={validationSchema}
       onSubmit={values => mutation.mutate(values)}
@@ -78,7 +85,7 @@ export default function NoteForm({ onClose }: NoteFormProps) {
             <button
               type="submit"
               className={css.submitButton}
-              disabled={mutation.isLoading}
+              disabled={mutation.isPending}
             >
               Create note
             </button>
