@@ -12,11 +12,23 @@ const modalRoot = document.getElementById('modal-root')!;
 
 export default function Modal({ children, onClose }: ModalProps) {
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
     };
+
+    // ✅ Блокуємо прокрутку
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      // ✅ Повертаємо прокрутку
+      document.body.style.overflow = originalOverflow;
+    };
   }, [onClose]);
 
   return createPortal(
@@ -28,7 +40,7 @@ export default function Modal({ children, onClose }: ModalProps) {
     >
       <div
         className={css.modal}
-        onClick={e => e.stopPropagation()}
+        onClick={event => event.stopPropagation()}
       >
         {children}
       </div>

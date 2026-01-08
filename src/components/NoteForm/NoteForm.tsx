@@ -1,5 +1,5 @@
 import type { NoteTag } from '../../types/note';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createNote } from '../../services/noteService';
@@ -40,58 +40,65 @@ export default function NoteForm({ onClose }: NoteFormProps) {
       validationSchema={validationSchema}
       onSubmit={values => mutation.mutate(values)}
     >
-      {({ errors, touched }) => (
-        <Form className={css.form}>
-          <div className={css.formGroup}>
-            <label htmlFor="title">Title</label>
-            <Field name="title" className={css.input} />
-            {touched.title && errors.title && (
-              <span className={css.error}>{errors.title}</span>
-            )}
-          </div>
+      <Form className={css.form}>
+        <div className={css.formGroup}>
+          <label htmlFor="title">Title</label>
+          <Field name="title" className={css.input} />
+          <ErrorMessage
+            name="title"
+            component="span"
+            className={css.error}
+          />
+        </div>
 
-          <div className={css.formGroup}>
-            <label htmlFor="content">Content</label>
-            <Field
-              as="textarea"
-              name="content"
-              rows={8}
-              className={css.textarea}
-            />
-            {touched.content && errors.content && (
-              <span className={css.error}>{errors.content}</span>
-            )}
-          </div>
+        <div className={css.formGroup}>
+          <label htmlFor="content">Content</label>
+          <Field
+            as="textarea"
+            name="content"
+            rows={8}
+            className={css.textarea}
+          />
+          <ErrorMessage
+            name="content"
+            component="span"
+            className={css.error}
+          />
+        </div>
 
-          <div className={css.formGroup}>
-            <label htmlFor="tag">Tag</label>
-            <Field as="select" name="tag" className={css.select}>
-              <option value="Todo">Todo</option>
-              <option value="Work">Work</option>
-              <option value="Personal">Personal</option>
-              <option value="Meeting">Meeting</option>
-              <option value="Shopping">Shopping</option>
-            </Field>
-          </div>
+        <div className={css.formGroup}>
+          <label htmlFor="tag">Tag</label>
+          <Field as="select" name="tag" className={css.select}>
+            <option value="Todo">Todo</option>
+            <option value="Work">Work</option>
+            <option value="Personal">Personal</option>
+            <option value="Meeting">Meeting</option>
+            <option value="Shopping">Shopping</option>
+          </Field>
+          <ErrorMessage
+            name="tag"
+            component="span"
+            className={css.error}
+          />
+        </div>
 
-          <div className={css.actions}>
-            <button
-              type="button"
-              className={css.cancelButton}
-              onClick={onClose}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className={css.submitButton}
-              disabled={mutation.isPending}
-            >
-              Create note
-            </button>
-          </div>
-        </Form>
-      )}
+        <div className={css.actions}>
+          <button
+            type="button"
+            className={css.cancelButton}
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className={css.submitButton}
+            disabled={mutation.isPending}
+          >
+            Create note
+          </button>
+        </div>
+      </Form>
     </Formik>
   );
 }

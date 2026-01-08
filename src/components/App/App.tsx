@@ -16,6 +16,11 @@ const PER_PAGE = 12;
 export default function App() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
+  const handleSearchChange = (value: string) => {
+  setSearch(value);
+  setPage(1);
+  };
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [debouncedSearch] = useDebounce(search, 500);
@@ -35,7 +40,7 @@ export default function App() {
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
-        <SearchBox value={search} onChange={setSearch} />
+        <SearchBox value={search} onChange={handleSearchChange} />
 
         {data && data.totalPages > 1 && (
           <Pagination
